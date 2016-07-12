@@ -25,15 +25,15 @@ type Command struct {
 }
 
 type Client struct {
-	Endpoint string
-	Token    string
+	Endpoint   string
+	Token      string
+	HTTPClient *http.Client
 }
 
 func (c *Client) DoRequest(req *http.Request) (*http.Response, error) {
 	req.Header.Add("Authorization", fmt.Sprintf("ModeCloud %s", c.Token))
 	req.Header.Add("Content-Type", "application/json")
-	client := &http.Client{}
-	return client.Do(req)
+	return c.HTTPClient.Do(req)
 }
 
 func (c *Client) DoListen(url string, origin string, callback func(*websocket.Conn)) {
@@ -59,11 +59,11 @@ type Device struct {
 }
 
 func NewDevice(endpoint string, token string, deviceId int) Device {
-	return Device{Client: Client{Endpoint: endpoint, Token: token}, DeviceId: deviceId}
+	return Device{Client: Client{Endpoint: endpoint, Token: token, HTTPClient: &http.Client{}}, DeviceId: deviceId}
 }
 
 func NewUser(endpoint string, token string) User {
-	return User{Client: Client{Endpoint: endpoint, Token: token}}
+	return User{Client: Client{Endpoint: endpoint, Token: token, HTTPClient: &http.Client{}}}
 }
 
 func (d *Device) TriggerEvent(event Event) (*http.Response, error) {
