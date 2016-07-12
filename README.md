@@ -1,5 +1,9 @@
 # modeclient
 
+[![Build Status](https://travis-ci.org/tily/modeclient.svg?branch=master)](https://travis-ci.org/tily/modeclient)
+[![Code Climate](https://codeclimate.com/github/tily/modeclient/badges/gpa.svg)](https://codeclimate.com/github/tily/modeclient)
+[![Issue Count](https://codeclimate.com/github/tily/modeclient/badges/issue_count.svg)](https://codeclimate.com/github/tily/modeclient)
+[![Coverage Status](https://coveralls.io/repos/github/tily/modeclient/badge.svg?branch=master)](https://coveralls.io/github/tily/modeclient?branch=master)
 [![GoDoc](https://godoc.org/github.com/tily/modeclient?status.svg)](http://godoc.org/github.com/tily/modeclient)
 
 ## Usage
