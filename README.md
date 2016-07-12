@@ -6,6 +6,8 @@
 [![Coverage Status](https://coveralls.io/repos/github/tily/modeclient/badge.svg?branch=master)](https://coveralls.io/github/tily/modeclient?branch=master)
 [![GoDoc](https://godoc.org/github.com/tily/modeclient?status.svg)](http://godoc.org/github.com/tily/modeclient)
 
+Minimum Go client for [MODE](http://www.tinkermode.com/).
+
 ## Usage
 
 ### Devices
