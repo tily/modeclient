@@ -9,7 +9,7 @@ Create new device:
 ```
 endpoint := "api.tinkermode.com"
 deviceAPIKey := "Your API key of device's"
-deviceId := 123 // Your device ID
+deviceId := 123 // Your ID of device's
 device := modeclient.NewDevice(endpoint, deviceAPIKey, deviceId)
 ```
 
