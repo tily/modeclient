@@ -53,3 +53,9 @@ user.ListenToEvents(func(event modeclient.Event) {
 	fmt.Printf("User received event: %+v\n", event)
 })
 ```
+
+## TODO
+
+* websocket reconnection of `DoListen`
+* write tests for `ListenToCommands` and `ListenToEvents`
+
