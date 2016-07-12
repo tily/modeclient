@@ -1,5 +1,7 @@
 # modeclient
 
+[![GoDoc](https://godoc.org/github.com/tily/modeclient?status.svg)](http://godoc.org/github.com/tily/modeclient)
+
 ## Usage
 
 ### Devices
