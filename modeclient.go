@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/tily/gofibwait"
 	"golang.org/x/net/websocket"
 	"net/http"
 	"time"
@@ -36,17 +37,34 @@ func (c *Client) DoRequest(req *http.Request) (*http.Response, error) {
 	return c.HTTPClient.Do(req)
 }
 
-func (c *Client) DoListen(url string, origin string, callback func(*websocket.Conn)) {
-	ws, err := websocket.Dial(url, "", origin)
-	if err != nil {
-		panic("Dial: " + err.Error())
-	}
+func (c *Client) DoListen(url string, origin string, callback func(*websocket.Conn) error) {
+	w := gofibwait.NewWaiter(60)
+	ws := c.ConnectWS(url, origin)
 	for {
-		select {
-		default:
-			callback(ws)
+		err := callback(ws)
+		if err != nil {
+			fmt.Printf("error: %s\n", err)
+			err := ws.Close()
+			if err != nil {
+			}
+			w.Wait()
+			ws = c.ConnectWS(url, origin)
+		} else {
+			w.Reset()
 		}
 	}
+}
+
+func (c *Client) ConnectWS(url string, origin string) *websocket.Conn {
+	w := gofibwait.NewWaiter(60)
+	for true {
+		w.Wait()
+		ws, err := websocket.Dial(url, "", origin)
+		if err == nil {
+			return ws
+		}
+	}
+	return nil
 }
 
 type User struct {
@@ -83,19 +101,27 @@ func (u *User) SendCommand(deviceId int, command Command) (*http.Response, error
 func (d *Device) ListenToCommands(callback func(Command)) {
 	url := fmt.Sprintf("ws://%s/devices/%d/command?authToken=%s", d.Endpoint, d.DeviceId, d.Token)
 	origin := fmt.Sprintf("http://%s/", d.Endpoint)
-	d.DoListen(url, origin, func(ws *websocket.Conn) {
+	d.DoListen(url, origin, func(ws *websocket.Conn) error {
 		command := Command{}
-		websocket.JSON.Receive(ws, &command)
-		callback(command)
+		if err := websocket.JSON.Receive(ws, &command); err != nil {
+			return err
+		} else {
+			callback(command)
+			return nil
+		}
 	})
 }
 
 func (u *User) ListenToEvents(callback func(Event)) {
 	url := fmt.Sprintf("ws://%s/userSession/websocket?authToken=%s", u.Endpoint, u.Token)
 	origin := fmt.Sprintf("http://%s/", u.Endpoint)
-	u.DoListen(url, origin, func(ws *websocket.Conn) {
+	u.DoListen(url, origin, func(ws *websocket.Conn) error {
 		event := Event{}
-		websocket.JSON.Receive(ws, &event)
-		callback(event)
+		if err := websocket.JSON.Receive(ws, &event); err != nil {
+			return err
+		} else {
+			callback(event)
+			return nil
+		}
 	})
 }
