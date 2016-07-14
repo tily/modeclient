@@ -99,7 +99,7 @@ func (u *User) SendCommand(deviceId int, command Command) (*http.Response, error
 }
 
 func (d *Device) ListenToCommands(callback func(Command)) {
-	url := fmt.Sprintf("ws://%s/devices/%d/command?authToken=%s", d.Endpoint, d.DeviceId, d.Token)
+	url := fmt.Sprintf("wss://%s/devices/%d/command?authToken=%s", d.Endpoint, d.DeviceId, d.Token)
 	origin := fmt.Sprintf("http://%s/", d.Endpoint)
 	d.DoListen(url, origin, func(ws *websocket.Conn) error {
 		command := Command{}
@@ -113,7 +113,7 @@ func (d *Device) ListenToCommands(callback func(Command)) {
 }
 
 func (u *User) ListenToEvents(callback func(Event)) {
-	url := fmt.Sprintf("ws://%s/userSession/websocket?authToken=%s", u.Endpoint, u.Token)
+	url := fmt.Sprintf("wss://%s/userSession/websocket?authToken=%s", u.Endpoint, u.Token)
 	origin := fmt.Sprintf("http://%s/", u.Endpoint)
 	u.DoListen(url, origin, func(ws *websocket.Conn) error {
 		event := Event{}
