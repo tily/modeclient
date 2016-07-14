@@ -62,6 +62,6 @@ user.ListenToEvents(func(event modeclient.Event) {
 
 ## TODO
 
-* websocket reconnection of `DoListen`
+* add logging
 * write tests for `ListenToCommands` and `ListenToEvents`
 
